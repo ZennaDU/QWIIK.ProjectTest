@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QWIIK.ProjectTest.Dto;
 using QWIIK.ProjectTest.EntityFramework;
 using QWIIK.ProjectTest.Models.User;
