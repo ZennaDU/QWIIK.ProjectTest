@@ -12,8 +12,5 @@ namespace QWIIK.ProjectTest.Models.User
         [MinLength(5, ErrorMessage = "Must be minimum 5 character")]
         [MaxLength(12, ErrorMessage = "Must be maximum 1000 character")]
         public string Password { get; set; } = "";
-        [Required]
-        [MinLength(5, ErrorMessage = "Must be minimum 5 character")]
-        [MaxLength(1000, ErrorMessage = "Must be maximum 1000 character")]
     }
 }

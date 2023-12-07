@@ -1,4 +1,4 @@
-﻿namespace QWIIK.ProjectTest.Entity
+﻿namespace QWIIK.ProjectTest.Dto
 {
     public abstract class BaseEntityDto
     {

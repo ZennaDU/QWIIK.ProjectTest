@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QWIIK.ProjectTest.EntityFramework;
+using QWIIK.ProjectTest.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<UserServices, UserServices>();
+builder.Services.AddScoped<AppointmentServices, AppointmentServices>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     string connectionstring = builder.Configuration.GetConnectionString("QwiikProjectTest")!;

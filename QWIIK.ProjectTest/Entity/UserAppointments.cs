@@ -4,7 +4,7 @@
     {
         public Guid UserId { get; set; }
         public Guid AppointmentId { get; set; }
-        public DateOnly AppointmentDate { get; set; }
-        public string AppointmentToken { get; set; }
+        public DateTime AppointmentDate { get; set; }
+        public string AppointmentToken { get; set; } = "";
     }
 }

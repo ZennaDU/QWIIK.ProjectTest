@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QWIIK.ProjectTest.Dto;
+using System.ComponentModel.DataAnnotations;
 
 namespace QWIIK.ProjectTest.Entity
 {
@@ -12,5 +13,18 @@ namespace QWIIK.ProjectTest.Entity
         public string Password { get; set; } = "";
 
         public string Role { get; set; } = "";
+        
+        public UserEntity()
+        {
+            
+        }
+        
+        public UserEntity(UserDto userDto)
+        {
+            UserName = userDto.Username;
+            Email = userDto.Email;
+            Password = userDto.Password;
+            Role = userDto.Role;
+        }
     }
 }

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\QWIIK.ProjectTest.props" />
+</Project>

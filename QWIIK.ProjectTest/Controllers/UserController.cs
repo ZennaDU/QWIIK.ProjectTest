@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using QWIIK.ProjectTest.Dto;
+using QWIIK.ProjectTest.Entity;
 using QWIIK.ProjectTest.EntityFramework;
 using QWIIK.ProjectTest.Models.User;
 using QWIIK.ProjectTest.Services;
@@ -25,11 +27,21 @@ namespace QWIIK.ProjectTest.Controllers
             var userCount = _context.Users.Count(user => user.Email == userModel.Email);
             if (userCount > 0)
             {
-
+                ModelState.AddModelError("Email", "This Email address is already used");
+                return BadRequest(ModelState);
             }
-            UserDto user = new UserDto() { Id = Guid.NewGuid(), Role = "customer" };
+
+            //create account
+            UserDto user = new UserDto(userModel);
+            user.Role = "customer";
+            _userServices.Register(user);
+
+
             string jwt = _userServices.CreateJwToken(user);
-            var response = new { JWToken = jwt };
+            var response = new { 
+                User = user,
+                JWToken = jwt 
+            };
             return Ok(response);
         }
     }
