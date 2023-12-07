@@ -85,3 +85,7 @@ E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\obj\Debug\net6.0\refint\Q
 E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\obj\Debug\net6.0\QWIIK.ProjectTest.pdb
 E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\obj\Debug\net6.0\QWIIK.ProjectTest.genruntimeconfig.cache
 E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\obj\Debug\net6.0\ref\QWIIK.ProjectTest.dll
+E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\bin\Debug\net6.0\Scrutor.dll
+E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+E:\Projects\ASPNET\QWIIK.ProjectTest\QWIIK.ProjectTest\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

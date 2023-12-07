@@ -24,10 +24,10 @@ namespace QWIIK.ProjectTest.Controllers
         [HttpPost("Register")]
         public IActionResult Register(UserModel userModel)
         {
-            var userCount = _context.Users.Count(user => user.Email == userModel.Email);
+            var userCount = _context.Users.Count(user => user.UserName == userModel.UserName);
             if (userCount > 0)
             {
-                ModelState.AddModelError("Email", "This Email address is already used");
+                ModelState.AddModelError("UserName", "This UserName is already used");
                 return BadRequest(ModelState);
             }
 
@@ -38,9 +38,37 @@ namespace QWIIK.ProjectTest.Controllers
 
 
             string jwt = _userServices.CreateJwToken(user);
-            var response = new { 
+            var response = new {
                 User = user,
-                JWToken = jwt 
+                JWToken = jwt
+            };
+            return Ok(response);
+        }
+
+        [HttpPost("Login")]
+        public IActionResult Login(string username, string password)
+        {
+            var user = _context.Users.FirstOrDefault(user => user.UserName == username);
+            if (user == null)
+            {
+                ModelState.AddModelError("UserName", "Username are not exist");
+                return BadRequest(ModelState);
+            }
+
+            //verify password
+            var passwordHasher = new PasswordHasher<UserEntity>();
+            var result = passwordHasher.VerifyHashedPassword(new UserEntity(), user.Password, password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("Password", "Wrong Password");
+                return BadRequest(ModelState);
+            }
+
+            string jwt = _userServices.CreateJwToken(new UserDto(user));
+            var response = new
+            {
+                User = user,
+                JWToken = jwt
             };
             return Ok(response);
         }
