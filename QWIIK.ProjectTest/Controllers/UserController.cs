@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using QWIIK.ProjectTest.Dto;
+using QWIIK.ProjectTest.Entity;
 using QWIIK.ProjectTest.EntityFramework;
 using QWIIK.ProjectTest.Models.User;
 using QWIIK.ProjectTest.Services;
@@ -19,17 +21,31 @@ namespace QWIIK.ProjectTest.Controllers
             _userServices = userServices;
         }
 
-        [HttpPost("Register")]
-        public IActionResult Register(UserModel userModel)
+        [HttpPost("Login")]
+        public IActionResult Login(string username, string password)
         {
-            var userCount = _context.Users.Count(user => user.Email == userModel.Email);
-            if (userCount > 0)
+            var user = _context.Users.FirstOrDefault(user => user.UserName == username);
+            if (user == null)
             {
-
+                ModelState.AddModelError("UserName", "Username are not exist");
+                return BadRequest(ModelState);
             }
-            UserDto user = new UserDto() { Id = Guid.NewGuid(), Role = "customer" };
-            string jwt = _userServices.CreateJwToken(user);
-            var response = new { JWToken = jwt };
+
+            //verify password
+            var passwordHasher = new PasswordHasher<UserEntity>();
+            var result = passwordHasher.VerifyHashedPassword(new UserEntity(), user.Password, password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("Password", "Wrong Password");
+                return BadRequest(ModelState);
+            }
+
+            string jwt = _userServices.CreateJwToken(new UserDto(user));
+            var response = new
+            {
+                User = user,
+                JWToken = jwt
+            };
             return Ok(response);
         }
     }

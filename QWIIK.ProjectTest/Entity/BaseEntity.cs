@@ -6,7 +6,7 @@ namespace QWIIK.ProjectTest.Entity
     {
         [Key]
         [Required]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; } = "SYSTEM";
         public DateTime? ModifiedAt { get; set; }

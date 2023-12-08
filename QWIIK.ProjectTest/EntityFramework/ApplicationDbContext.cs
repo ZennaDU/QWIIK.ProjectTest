@@ -26,12 +26,14 @@ namespace QWIIK.ProjectTest.EntityFramework
 
             modelBuilder.Entity<AppointmentsEntity>(entity =>
             {
+                entity.Property(e => e.AppointmentDate).HasColumnType("date");
                 entity.HasIndex(e => e.AppointmentDate).IsUnique();
                 entity.HasQueryFilter(e => !e.IsDeleted);
             });
 
             modelBuilder.Entity<UserAppointments>(entity =>
             {
+                entity.Property(e => e.AppointmentDate).HasColumnType("date");
                 entity.HasIndex(e => e.AppointmentDate);
                 entity.HasIndex(e => e.UserId);
                 entity.HasQueryFilter(e => !e.IsDeleted);

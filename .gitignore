@@ -1,0 +1,6 @@
+# ASP.NET 6 specific
+.vs/
+
+# Other general exclusions (you can add more as needed)
+bin/
+obj/
