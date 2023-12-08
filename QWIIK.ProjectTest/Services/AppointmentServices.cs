@@ -97,11 +97,12 @@ namespace QWIIK.ProjectTest.Services
             bool found = false;
             while(index < appointments.Count && found == false)
             {
-                if(appointments[index].AppointmentDate.Date != appointmentDate.Date && appointmentDate.Date > appointments[index].AppointmentDate.Date)
+                
+                if (appointments[index].IsAvailable && appointments[index].Count < maxDay && appointments[index].Count > 0 && appointments[index].AppointmentDate.Date == appointmentDate.Date)
                 {
                     found = true;
-                }else 
-                if (appointments[index].IsAvailable && appointments[index].Count < maxDay && appointments[index].AppointmentDate.Date == appointmentDate.Date)
+                }
+                else if (appointments[index].AppointmentDate.Date != appointmentDate.Date)
                 {
                     found = true;
                 }
