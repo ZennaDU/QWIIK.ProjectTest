@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QWIIK.ProjectTest.Dto;
 using QWIIK.ProjectTest.Entity;
 using QWIIK.ProjectTest.EntityFramework;
