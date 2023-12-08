@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QWIIK.ProjectTest.Dto;
 using QWIIK.ProjectTest.EntityFramework;
@@ -12,12 +13,12 @@ namespace QWIIK.ProjectTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AgencyController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserServices _userServices;
         private readonly AppointmentServices _appointmentServices;
-        public AgencyController(ApplicationDbContext context, UserServices userServices, AppointmentServices appointmentServices)
+        public CustomerController(ApplicationDbContext context, UserServices userServices, AppointmentServices appointmentServices)
         {
             _context = context;
             _userServices = userServices;
@@ -36,7 +37,7 @@ namespace QWIIK.ProjectTest.Controllers
 
             //create account
             UserDto user = new UserDto(userModel);
-            user.Role = AppConstant.Role.AGENCY_ROLE;
+            user.Role = AppConstant.Role.CUSTOMER_ROLE;
             user = _userServices.Register(user);
 
 
@@ -49,54 +50,45 @@ namespace QWIIK.ProjectTest.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles = AppConstant.Role.AGENCY_ROLE)]
-        [HttpGet("GetAppointmentOptions")]
-        public IActionResult GetAppointmentOptions()
-        {
-            var response = new
-            {
-                MaxAppointmentPerDay = _appointmentServices.GetAppointmentMaxDay()
-            };
-            return Ok(response);
-        }
-
-        [Authorize(Roles = AppConstant.Role.AGENCY_ROLE)]
-        [HttpPost("UpdateAppointmentOptions")]
-        public IActionResult UpdateAppointmentOptions([FromBody] AppointmentOptionsModel optionsModel) 
+        [Authorize(Roles = AppConstant.Role.CUSTOMER_ROLE)]
+        [HttpPost("BookAppointment")]
+        public IActionResult BookAppointment([FromBody] AppointmentRequestModel appointmentRequest)
         {
             var identity = User.Identity as ClaimsIdentity;
-            if (identity == null)
+            if(identity == null)
             {
                 ModelState.AddModelError("Login", "Please Login First");
                 return BadRequest(ModelState);
             }
 
             Dictionary<string, string> claims = new Dictionary<string, string>();
-            foreach (Claim claim in identity.Claims)
+            foreach(Claim claim in identity.Claims)
             {
                 claims.Add(claim.Type, claim.Value);
             }
 
-            var userId = claims["id"];
+            var userId = new Guid(claims["id"]);
+            var user = _context.Users.FirstOrDefault(e => e.Id == userId);
+            if (user == null)
+            {
+                ModelState.AddModelError("Login", "Please Login First");
+                return BadRequest(ModelState);
+            }
 
-            AppointmentOptionsDto appointmentOptionsDto = new AppointmentOptionsDto(optionsModel);
-            _appointmentServices.UpdateAppointmentMaxDay(appointmentOptionsDto, userId);
+            //validate are this is first time appointment
+            if (_context.UserAppoinments.FirstOrDefault(entity => 
+            entity.AppointmentDate.Date == appointmentRequest.AppointmentDate.Date && 
+            entity.UserId == userId) != null)
+            {
+                ModelState.AddModelError("Error", "Double Book");
+                return BadRequest(ModelState);
+            }
+
+            var bookedDatetime = _appointmentServices.BookAppointment(userId, appointmentRequest.AppointmentDate).ToString("yyyy-MM-dd");
 
             var response = new
             {
-                AppointmentOptionsDto = optionsModel
-            };
-            return Ok(response);
-        }
-
-        [Authorize(Roles = AppConstant.Role.AGENCY_ROLE)]
-        [HttpPost("GetUserAppointments")]
-        public IActionResult GetUserAppointments([FromBody] AppointmentRequestModel appointmentRequest)
-        {
-            var users = _appointmentServices.GetUserAppointments(appointmentRequest.AppointmentDate);
-            var response = new
-            {
-                Customers = users
+                Message = $"Booked at {bookedDatetime}"
             };
             return Ok(response);
         }

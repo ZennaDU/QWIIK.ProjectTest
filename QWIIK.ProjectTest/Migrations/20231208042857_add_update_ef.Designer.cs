@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QWIIK.ProjectTest.EntityFramework;
 
@@ -11,9 +12,11 @@ using QWIIK.ProjectTest.EntityFramework;
 namespace QWIIK.ProjectTest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208042857_add_update_ef")]
+    partial class add_update_ef
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +119,9 @@ namespace QWIIK.ProjectTest.Migrations
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("date");
 
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("AppointmentToken")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -207,17 +213,6 @@ namespace QWIIK.ProjectTest.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("QWIIK.ProjectTest.Entity.UserAppointments", b =>
-                {
-                    b.HasOne("QWIIK.ProjectTest.Entity.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

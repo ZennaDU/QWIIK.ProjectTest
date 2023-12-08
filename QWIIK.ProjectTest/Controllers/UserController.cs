@@ -21,30 +21,6 @@ namespace QWIIK.ProjectTest.Controllers
             _userServices = userServices;
         }
 
-        [HttpPost("Register")]
-        public IActionResult Register(UserModel userModel)
-        {
-            var userCount = _context.Users.Count(user => user.UserName == userModel.UserName);
-            if (userCount > 0)
-            {
-                ModelState.AddModelError("UserName", "This UserName is already used");
-                return BadRequest(ModelState);
-            }
-
-            //create account
-            UserDto user = new UserDto(userModel);
-            user.Role = "customer";
-            _userServices.Register(user);
-
-
-            string jwt = _userServices.CreateJwToken(user);
-            var response = new {
-                User = user,
-                JWToken = jwt
-            };
-            return Ok(response);
-        }
-
         [HttpPost("Login")]
         public IActionResult Login(string username, string password)
         {

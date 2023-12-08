@@ -1,5 +1,6 @@
 ﻿using QWIIK.ProjectTest.Dto;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QWIIK.ProjectTest.Entity
 {
@@ -13,7 +14,10 @@ namespace QWIIK.ProjectTest.Entity
         public string Password { get; set; } = "";
 
         public string Role { get; set; } = "";
-        
+
+        [NotMapped]
+        public ICollection<UserAppointments> userAppointments { get; set; } = new HashSet<UserAppointments>();
+
         public UserEntity()
         {
             

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QWIIK.ProjectTest.EntityFramework;
 
@@ -11,9 +12,11 @@ using QWIIK.ProjectTest.EntityFramework;
 namespace QWIIK.ProjectTest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208041736_add_new_appointment")]
+    partial class add_new_appointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,8 +112,10 @@ namespace QWIIK.ProjectTest.Migrations
 
             modelBuilder.Entity("QWIIK.ProjectTest.Entity.UserAppointments", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppointmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AppointmentDate")
@@ -133,6 +138,9 @@ namespace QWIIK.ProjectTest.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -142,12 +150,11 @@ namespace QWIIK.ProjectTest.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "AppointmentId");
 
                     b.HasIndex("AppointmentDate");
+
+                    b.HasIndex("AppointmentId");
 
                     b.HasIndex("UserId");
 
@@ -211,13 +218,31 @@ namespace QWIIK.ProjectTest.Migrations
 
             modelBuilder.Entity("QWIIK.ProjectTest.Entity.UserAppointments", b =>
                 {
+                    b.HasOne("QWIIK.ProjectTest.Entity.AppointmentsEntity", "Appointment")
+                        .WithMany("userAppointments")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("QWIIK.ProjectTest.Entity.UserEntity", "User")
-                        .WithMany()
+                        .WithMany("userAppointments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Appointment");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QWIIK.ProjectTest.Entity.AppointmentsEntity", b =>
+                {
+                    b.Navigation("userAppointments");
+                });
+
+            modelBuilder.Entity("QWIIK.ProjectTest.Entity.UserEntity", b =>
+                {
+                    b.Navigation("userAppointments");
                 });
 #pragma warning restore 612, 618
         }

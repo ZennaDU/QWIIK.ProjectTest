@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using QWIIK.ProjectTest.Dto;
 using QWIIK.ProjectTest.Entity;
 using QWIIK.ProjectTest.EntityFramework;
-using QWIIK.ProjectTest.Models.User;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -43,7 +42,7 @@ namespace QWIIK.ProjectTest.Services
             return jwt;
         }
 
-        public void Register(UserDto userDto)
+        public UserDto Register(UserDto userDto)
         {
             //create account
             UserEntity user = new UserEntity(userDto);
@@ -55,6 +54,9 @@ namespace QWIIK.ProjectTest.Services
 
             _context.Users.Add(user);
             _context.SaveChanges();
+
+            userDto = new UserDto(user);
+            return userDto;
         }
     }
 }
