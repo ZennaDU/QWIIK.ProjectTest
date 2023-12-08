@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using QWIIK.ProjectTest.Dto;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QWIIK.ProjectTest.Entity
 {
@@ -8,7 +9,16 @@ namespace QWIIK.ProjectTest.Entity
         public int Count { get; set; } = 0;
         public bool IsAvailable { get; set; } = true;
         public string Description { get; set; } = "";
-        [NotMapped]
-        public ICollection<UserAppointments> userAppointments { get; set; } = new HashSet<UserAppointments>();
+
+        public AppointmentsEntity()
+        {
+            
+        }
+        public AppointmentsEntity(AppointmentDto appointmentDto)
+        {
+            AppointmentDate = appointmentDto.AppointmentDate;
+            IsAvailable = appointmentDto.IsAvailable;
+            Description = appointmentDto.Description;
+        }
     }
 }

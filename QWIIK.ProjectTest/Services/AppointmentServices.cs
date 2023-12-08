@@ -157,5 +157,26 @@ namespace QWIIK.ProjectTest.Services
 
             return users;
         }
+
+        public void ConfigureAppointments(UserDto user, AppointmentDto appointmentDto)
+        {
+            var appointment = _context.Appointments.FirstOrDefault(entity => entity.AppointmentDate == appointmentDto.AppointmentDate);
+
+            if (appointment == null)
+            {
+                _context.Appointments.Add(new AppointmentsEntity(appointmentDto));
+            }
+            else
+            {
+                appointment.IsAvailable = appointmentDto.IsAvailable;
+                appointmentDto.Description = appointmentDto.Description;
+                appointment.ModifiedAt = DateTime.Now;
+                appointment.ModifiedBy = user.Username;
+                _context.Appointments.Update(appointment);
+            }
+
+            _context.SaveChanges();
+
+        }
     }
 }

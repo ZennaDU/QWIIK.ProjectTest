@@ -84,7 +84,7 @@ namespace QWIIK.ProjectTest.Controllers
                 return BadRequest(ModelState);
             }
 
-            var bookedDatetime = _appointmentServices.BookAppointment(userId, appointmentRequest.AppointmentDate).ToString("yyyy-MM-dd");
+            var bookedDatetime = _appointmentServices.BookAppointment(user, appointmentRequest.AppointmentDate).ToString("yyyy-MM-dd");
 
             var response = new
             {

@@ -100,5 +100,39 @@ namespace QWIIK.ProjectTest.Controllers
             };
             return Ok(response);
         }
+
+        [Authorize(Roles = AppConstant.Role.AGENCY_ROLE)]
+        [HttpPost("ConfigureAppointments")]
+        public IActionResult ConfigureAppointments([FromBody] ConfigureAppointmentRequestModel configureAppointmentRequest)
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            if (identity == null)
+            {
+                ModelState.AddModelError("Login", "Please Login First");
+                return BadRequest(ModelState);
+            }
+
+            Dictionary<string, string> claims = new Dictionary<string, string>();
+            foreach (Claim claim in identity.Claims)
+            {
+                claims.Add(claim.Type, claim.Value);
+            }
+
+            var userId = new Guid(claims["id"]);
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("Login", "Please Login First");
+                return BadRequest(ModelState);
+            }
+
+            _appointmentServices.ConfigureAppointments(new UserDto(user), new AppointmentDto(configureAppointmentRequest));
+            var response = new
+            {
+                Customers = configureAppointmentRequest
+            };
+            return Ok(response);
+        }
     }
 }
